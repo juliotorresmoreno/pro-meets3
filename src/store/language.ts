@@ -44,9 +44,11 @@ const useLanguageStore = create<LanguageState>()(
                 },
                 setItem: (name, value) => {
                     cookieStorage.setItem(name, value.state.language);
+                    document.location.reload();
                 },
                 removeItem: (name) => {
                     cookieStorage.removeItem(name);
+                    document.location.reload();
                 },
             },
         }

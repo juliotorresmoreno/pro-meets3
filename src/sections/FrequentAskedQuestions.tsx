@@ -1,5 +1,6 @@
 'use client';
 
+import { defaultLanguage } from '@/utils';
 import { useState } from 'react';
 import {
     FaBrain,
@@ -284,10 +285,10 @@ interface FrequentAskedQuestionsProps {
 }
 
 export function FrequentAskedQuestions({
-    language = "en",
+    language = defaultLanguage
 }: FrequentAskedQuestionsProps) {
     const [activeIndex, setActiveIndex] = useState<number | null>(0);
-    const t = translations[language] || translations.en;
+    const t = translations[language] || translations[defaultLanguage];
 
     const toggleFAQ = (index: number) => {
         setActiveIndex(activeIndex === index ? null : index);

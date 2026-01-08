@@ -13,6 +13,7 @@ import {
     FaBullseye
 } from "react-icons/fa";
 import TypeWriter from "@/components/TypeWriter";
+import { defaultLanguage, Language } from "@/utils";
 
 const translations = {
     es: {
@@ -158,11 +159,11 @@ const translations = {
 };
 
 interface HeroProps {
-    readonly language?: keyof typeof translations;
+    readonly language?: Language;
 }
 
-const HeroSection: React.FC<HeroProps> = ({ language = "es" }) => {
-    const t = translations[language] || translations.es;
+const HeroSection: React.FC<HeroProps> = ({ language = defaultLanguage }) => {
+    const t = translations[language] || translations[defaultLanguage];
 
     const words = useMemo(
         () => [t.typing1, t.typing2, t.typing3, t.typing4],
