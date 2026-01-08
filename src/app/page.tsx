@@ -25,7 +25,7 @@ export default async function Home() {
             <FeaturesSection language={language} />
             <OfferingsSection language={language} />
             <FrequentAskedQuestions language={language} />
-            <CTASection />
+            <CTASection language={language} />
 
             <Footer language={language} />
         </div>
