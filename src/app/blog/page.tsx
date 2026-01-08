@@ -1,10 +1,9 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import RegistrationForm from "@/components/RegistrationForm";
 import { defaultLanguage, isLanguage, Language } from "@/utils";
 import { cookies } from "next/headers";
 
-export default async function SignUp() {
+export default async function Blog() {
     const cookieStore = await cookies();
     const languageCookie = cookieStore.get('language')?.value ?? "";
     const language = isLanguage(languageCookie) ? languageCookie as Language : defaultLanguage;
@@ -14,7 +13,6 @@ export default async function SignUp() {
             {/* Navbar */}
             <Header language={language} />
 
-            <RegistrationForm language={language} />
 
             <Footer language={language} />
         </div>

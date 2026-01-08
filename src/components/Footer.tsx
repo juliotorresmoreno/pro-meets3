@@ -1,7 +1,7 @@
 import Link from "next/link";
 import config from "@/config";
 import { FaLinkedin, FaVideo } from "react-icons/fa";
-import { Language } from "@/utils/language";
+import { defaultLanguage, Language } from "@/utils/language";
 
 const translations = {
     en: {
@@ -87,12 +87,12 @@ const translations = {
 };
 
 interface FooterProps {
-    readonly language: Language;
+    readonly language?: Language;
 }
 
-export default function Footer({ language }: FooterProps) {
+export default function Footer({ language = defaultLanguage }: FooterProps) {
     const currentYear = new Date().getFullYear();
-    const t = translations[language] || translations.en;
+    const t = translations[language] || translations[defaultLanguage];
 
     return (
         <footer className="bg-gray-900 text-gray-300 py-12 px-4 sm:px-6 lg:px-8">
