@@ -369,20 +369,6 @@ const RegistrationForm = ({ language = 'en' }: RegistrationFormProps) => {
                                     onChange={(value) => handleInputChange('phone', value)}
                                     placeholder={t.countryPlaceholder}
                                 />
-
-                                {/* Phone Input */}
-                                <div className="flex-1">
-                                    <input
-                                        type="tel"
-                                        value={formData.phone}
-                                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
-                                        placeholder="+1 234 567 8900"
-                                    />
-                                    {errors.phone && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
-                                    )}
-                                </div>
                             </div>
                         </div>
 

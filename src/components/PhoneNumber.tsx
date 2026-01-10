@@ -48,38 +48,43 @@ export default function PhoneNumber({ language, value = "", onChange, placeholde
     };
 
     return (
-        <div className="relative w-full">
-            <button
-                type="button"
-                onClick={() => setIsCountryOpen(v => !v)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg flex items-center justify-between bg-white"
-            >
-                <span>{selected.flag} {selected.callingCode}</span>
-                <FaChevronDown className={`w-4 h-4 ${isCountryOpen ? "rotate-180" : ""}`} />
-            </button>
+        <div className="relative w-full flex gap-4">
+            <div className="flex-1 relative">
+                <button
+                    type="button"
+                    onClick={() => setIsCountryOpen(v => !v)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg flex items-center justify-between bg-white hover:border-gray-400 transition-colors"
+                >
+                    <span>{selected.flag} {selected.name}</span>
+                    <FaChevronDown className={`w-4 h-4 transition-transform ${isCountryOpen ? "rotate-180" : ""}`} />
+                </button>
 
-            {isCountryOpen && (
-                <div className="absolute z-10 w-full mt-1 bg-white border rounded-lg max-h-60 overflow-y-auto">
-                    {countries.map(c => (
-                        <button
-                            key={c.code}
-                            type="button"
-                            onClick={() => handleCountrySelect(c.code)}
-                            className="w-full px-4 py-2 text-left hover:bg-gray-50"
-                        >
-                            {c.flag} {c.name} ({c.callingCode})
-                        </button>
-                    ))}
-                </div>
-            )}
+                {/* Dropdown - posicionado absolutamente respecto al botón */}
+                {isCountryOpen && (
+                    <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        {countries.map(c => (
+                            <button
+                                key={c.code}
+                                type="button"
+                                onClick={() => handleCountrySelect(c.code)}
+                                className={`w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors ${country === c.code ? 'bg-purple-50 text-purple-700' : ''}`}
+                            >
+                                {c.flag} {c.name}
+                            </button>
+                        ))}
+                    </div>
+                )}
+            </div>
 
-            <input
-                type="tel"
-                value={value.startsWith(selected.callingCode) ? value : `${selected.callingCode} `}
-                onChange={handleInputChange}
-                placeholder={placeholder}
-                className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-lg"
-            />
+            <div className="flex-1">
+                <input
+                    type="tel"
+                    value={value.startsWith(selected.callingCode) ? value : `${selected.callingCode} `}
+                    onChange={handleInputChange}
+                    placeholder={placeholder}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                />
+            </div>
         </div>
     );
 }
