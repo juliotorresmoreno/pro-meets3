@@ -1,3 +1,4 @@
+"use server";
 
 // app/page.js
 import Footer from '@/components/Footer';

@@ -6,11 +6,11 @@ import {
     FaSearch,
     FaBookOpen,
     FaUser,
-    FaComment,
     FaBars,
     FaTimes,
     FaChevronDown,
-    FaGlobe
+    FaGlobe,
+    FaArrowRight
 } from 'react-icons/fa';
 import Image from 'next/image';
 import { Language } from '@/utils';
@@ -146,7 +146,7 @@ const Header = ({ language }: HeaderProps) => {
                                 className="px-4 py-2 bg-linear-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center group"
                                 href="/signup"
                             >
-                                <FaComment className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-200" />
+                                <FaArrowRight className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-200" />
                                 {t.signup}
                             </Link>
 
@@ -265,7 +265,7 @@ const Header = ({ language }: HeaderProps) => {
                             href="/signup"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            <FaComment className="w-5 h-5 mr-2" />
+                            <FaArrowRight className="w-5 h-5 mr-2" />
                             {t.signup}
                         </Link>
                     </div>

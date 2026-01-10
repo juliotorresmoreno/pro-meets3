@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from 'react';
-import { FaUserTie, FaUserGraduate, FaEye, FaEyeSlash, FaChevronDown } from 'react-icons/fa';
-import { Language } from '@/utils';
+import { FaUserTie, FaUserGraduate, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { defaultLanguage, Language } from '@/utils';
+import PhoneNumber from './PhoneNumber';
+import { CountryCode } from 'libphonenumber-js';
 
 const translations = {
     en: {
@@ -28,18 +30,6 @@ const translations = {
         invalidEmail: "Please enter a valid email",
         passwordMismatch: "Passwords do not match",
         passwordRequirements: "Password must be at least 8 characters long",
-        countries: {
-            US: "United States",
-            MX: "Mexico",
-            ES: "Spain",
-            FR: "France",
-            DE: "Germany",
-            UK: "United Kingdom",
-            JP: "Japan",
-            CN: "China",
-            CO: "Colombia",
-            AR: "Argentina"
-        }
     },
     es: {
         title: "Crea tu cuenta de ProMeets",
@@ -64,18 +54,6 @@ const translations = {
         invalidEmail: "Por favor ingresa un correo válido",
         passwordMismatch: "Las contraseñas no coinciden",
         passwordRequirements: "La contraseña debe tener al menos 8 caracteres",
-        countries: {
-            US: "Estados Unidos",
-            MX: "México",
-            ES: "España",
-            FR: "Francia",
-            DE: "Alemania",
-            UK: "Reino Unido",
-            JP: "Japón",
-            CN: "China",
-            CO: "Colombia",
-            AR: "Argentina"
-        }
     },
     fr: {
         title: "Créez votre compte ProMeets",
@@ -100,18 +78,6 @@ const translations = {
         invalidEmail: "Veuillez entrer un email valide",
         passwordMismatch: "Les mots de passe ne correspondent pas",
         passwordRequirements: "Le mot de passe doit comporter au moins 8 caractères",
-        countries: {
-            US: "États-Unis",
-            MX: "Mexique",
-            ES: "Espagne",
-            FR: "France",
-            DE: "Allemagne",
-            UK: "Royaume-Uni",
-            JP: "Japon",
-            CN: "中国",
-            CO: "Colombie",
-            AR: "Argentine"
-        }
     },
     jp: {
         title: "ProMeetsアカウントを作成",
@@ -136,18 +102,6 @@ const translations = {
         invalidEmail: "有効なメールアドレスを入力してください",
         passwordMismatch: "パスワードが一致しません",
         passwordRequirements: "パスワードは8文字以上必要です",
-        countries: {
-            US: "アメリカ合衆国",
-            MX: "メキシコ",
-            ES: "スペイン",
-            FR: "フランス",
-            DE: "ドイツ",
-            UK: "イギリス",
-            JP: "日本",
-            CN: "中国",
-            CO: "コロンビア",
-            AR: "アルゼンチン"
-        }
     },
     zh: {
         title: "创建您的ProMeets账户",
@@ -172,18 +126,6 @@ const translations = {
         invalidEmail: "请输入有效的邮箱地址",
         passwordMismatch: "密码不匹配",
         passwordRequirements: "密码长度至少为8个字符",
-        countries: {
-            US: "美国",
-            MX: "墨西哥",
-            ES: "西班牙",
-            FR: "法国",
-            DE: "德国",
-            UK: "英国",
-            JP: "日本",
-            CN: "中国",
-            CO: "哥伦比亚",
-            AR: "阿根廷"
-        }
     }
 };
 
@@ -195,7 +137,7 @@ interface FormData {
     userType: 'recruiter' | 'candidate' | null;
     fullName: string;
     email: string;
-    country: string;
+    country: CountryCode;
     phone: string;
     password: string;
     confirmPassword: string;
@@ -214,15 +156,9 @@ const RegistrationForm = ({ language = 'en' }: RegistrationFormProps) => {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [isCountryOpen, setIsCountryOpen] = useState(false);
     const [errors, setErrors] = useState<Partial<FormData>>({});
-    
-    const t = translations[language] || translations['en'];
 
-    const countries = Object.entries(t.countries).map(([code, name]) => ({
-        code,
-        name
-    }));
+    const t = translations[language] || translations[defaultLanguage];
 
     const handleUserTypeSelect = (type: 'recruiter' | 'candidate') => {
         setFormData(prev => ({ ...prev, userType: type }));
@@ -231,7 +167,7 @@ const RegistrationForm = ({ language = 'en' }: RegistrationFormProps) => {
 
     const handleInputChange = (field: keyof FormData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
-        
+
         // Clear error for this field when user starts typing
         if (errors[field]) {
             setErrors(prev => ({ ...prev, [field]: undefined }));
@@ -260,17 +196,12 @@ const RegistrationForm = ({ language = 'en' }: RegistrationFormProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (validateForm()) {
             // Here you would typically make an API call
             console.log('Form submitted:', formData);
             alert('Registration successful! (This is a demo)');
         }
-    };
-
-    const handleCountrySelect = (countryCode: string) => {
-        setFormData(prev => ({ ...prev, country: countryCode }));
-        setIsCountryOpen(false);
     };
 
     if (step === 'selection') {
@@ -296,15 +227,15 @@ const RegistrationForm = ({ language = 'en' }: RegistrationFormProps) => {
                                 <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-purple-200 transition-colors duration-300">
                                     <FaUserTie className="h-10 w-10 text-purple-600" />
                                 </div>
-                                
+
                                 <h3 className="text-2xl font-bold text-gray-900 mb-3">
                                     {t.recruiter}
                                 </h3>
-                                
+
                                 <p className="text-gray-600 mb-6">
                                     {t.recruiterDesc}
                                 </p>
-                                
+
                                 <div className="mt-auto">
                                     <div className="inline-flex items-center gap-2 text-purple-600 font-semibold">
                                         <span>{t.recruiter}</span>
@@ -323,15 +254,15 @@ const RegistrationForm = ({ language = 'en' }: RegistrationFormProps) => {
                                 <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-200 transition-colors duration-300">
                                     <FaUserGraduate className="h-10 w-10 text-blue-600" />
                                 </div>
-                                
+
                                 <h3 className="text-2xl font-bold text-gray-900 mb-3">
                                     {t.candidate}
                                 </h3>
-                                
+
                                 <p className="text-gray-600 mb-6">
                                     {t.candidateDesc}
                                 </p>
-                                
+
                                 <div className="mt-auto">
                                     <div className="inline-flex items-center gap-2 text-blue-600 font-semibold">
                                         <span>{t.candidate}</span>
@@ -356,7 +287,7 @@ const RegistrationForm = ({ language = 'en' }: RegistrationFormProps) => {
     }
 
     return (
-        <div className="min-h-screen bg-white flex items-center justify-center p-4 pt-20">
+        <div className="min-h-screen bg-white flex items-center justify-center p-4 pt-24">
             <div className="max-w-xl w-full">
                 <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
                     {/* Back button */}
@@ -429,37 +360,18 @@ const RegistrationForm = ({ language = 'en' }: RegistrationFormProps) => {
                                 {t.whatsapp}
                             </label>
                             <p className="text-sm text-gray-500 mb-3">{t.phonePlaceholder}</p>
-                            
+
                             <div className="flex gap-3">
                                 {/* Country Selector */}
-                                <div className="relative flex-1">
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsCountryOpen(!isCountryOpen)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg flex items-center justify-between bg-white hover:border-gray-400 transition-colors"
-                                    >
-                                        <span>{t.countries[formData.country as keyof typeof t.countries]}</span>
-                                        <FaChevronDown className={`w-4 h-4 transition-transform ${isCountryOpen ? 'rotate-180' : ''}`} />
-                                    </button>
-                                    
-                                    {isCountryOpen && (
-                                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                                            {countries.map((country) => (
-                                                <button
-                                                    key={country.code}
-                                                    type="button"
-                                                    onClick={() => handleCountrySelect(country.code)}
-                                                    className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors ${formData.country === country.code ? 'bg-purple-50 text-purple-700' : ''}`}
-                                                >
-                                                    {country.name}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
+                                <PhoneNumber
+                                    language={language}
+                                    value={formData.phone}
+                                    onChange={(value) => handleInputChange('phone', value)}
+                                    placeholder={t.countryPlaceholder}
+                                />
 
                                 {/* Phone Input */}
-                                <div className="flex-2">
+                                <div className="flex-1">
                                     <input
                                         type="tel"
                                         value={formData.phone}
