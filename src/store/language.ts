@@ -28,8 +28,7 @@ const useLanguageStore = create<LanguageState>()(
                     return value ? { state: { [name]: value }, version: 0 } : null;
                 },
                 setItem: (name, value) => {
-                    const key = name as keyof typeof value.state;
-                    cookieStorage.setItem(name, value.state[key] ?? "");
+                    cookieStorage.setItem(name, value.state[name] ?? "");
                     document.location.reload();
                 },
                 removeItem: (name) => {

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { FaEye, FaEyeSlash, FaGoogle, FaLinkedin } from 'react-icons/fa';
 import Link from 'next/link';
 import { Language } from '@/utils';
+import { login } from '@/services';
+import useSessionStore from '@/store/session';
 
 const translations = {
     en: {
@@ -111,12 +113,14 @@ const LoginForm = ({ language = 'en' }: LoginFormProps) => {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState<Partial<FormData>>({});
-    
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const sessionStore = useSessionStore();
+
     const t = translations[language] || translations['en'];
 
     const handleInputChange = (field: keyof FormData, value: string | boolean) => {
         setFormData(prev => ({ ...prev, [field]: value }));
-        
+
         // Clear error for this field when user starts typing
         if (errors[field as keyof typeof errors]) {
             setErrors(prev => ({ ...prev, [field]: undefined }));
@@ -139,14 +143,36 @@ const LoginForm = ({ language = 'en' }: LoginFormProps) => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
-        if (validateForm()) {
-            // Here you would typically make an API call
-            console.log('Login submitted:', formData);
-            alert('Login successful! (This is a demo)');
+
+        if (!validateForm()) {
+            return;
         }
+
+        setIsSubmitting(true);
+        try {
+            const result = await login({
+                email: formData.email,
+                password: formData.password,
+                rememberMe: formData.rememberMe
+            });
+
+            sessionStore.setAccessToken(result.access_token);
+            sessionStore.setRefreshToken(result.refresh_token);
+
+            // redirect or update UI after successful login
+            console.log('Login successful:', result);
+            redirectToDashboard();
+        } catch (error) {
+            console.error('Login failed:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const redirectToDashboard = () => {
+        window.location.href = '/dashboard';
     };
 
     const handleSocialLogin = (provider: 'google' | 'linkedin') => {
@@ -239,6 +265,7 @@ const LoginForm = ({ language = 'en' }: LoginFormProps) => {
                         {/* Submit Button */}
                         <button
                             type="submit"
+                            disabled={isSubmitting}
                             className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-300 shadow-md hover:shadow-lg active:scale-95"
                         >
                             {t.signIn}
@@ -280,8 +307,8 @@ const LoginForm = ({ language = 'en' }: LoginFormProps) => {
                     <div className="mt-8 pt-6 border-t border-gray-200 text-center">
                         <p className="text-gray-600">
                             {t.noAccount}{' '}
-                            <Link 
-                                href="/registro/empresa" 
+                            <Link
+                                href="/registro/empresa"
                                 className="text-purple-600 font-semibold hover:text-purple-700"
                             >
                                 {t.signUp}

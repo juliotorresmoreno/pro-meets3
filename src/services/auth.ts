@@ -87,11 +87,13 @@ interface LoginResponse {
   refresh_token: string;
 }
 
-export async function login(
-  email: string,
-  password: string,
-  rememberMe: boolean = false
-): Promise<LoginResponse> {
+interface LoginFormData {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
+export async function login({ email, password, rememberMe = false}: LoginFormData): Promise<LoginResponse> {
   const response = await fetch(`${apiUrl}/auth/login`, {
     method: "POST",
     headers: {

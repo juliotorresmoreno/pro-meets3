@@ -5,14 +5,20 @@ import CookieStorage from "@/utils/cookieStorage";
 const cookieStorage = new CookieStorage();
 
 interface SessionState {
-    token: string | null;
+    accessToken: string | null;
+    refreshToken: string | null;
+
+    setAccessToken: (accessToken: string | null) => void;
+    setRefreshToken: (refreshToken: string | null) => void;
 }
 
 const useSessionStore = create<SessionState>()(
     persist(
         (set) => ({
-            token: null,
-            setToken: (token: string | null) => set({ token }),
+            accessToken: null,
+            refreshToken: null,
+            setAccessToken: (accessToken: string | null) => set({ accessToken }),
+            setRefreshToken: (refreshToken: string | null) => set({ refreshToken }),
         }),
         {
             name: "session",
@@ -22,8 +28,7 @@ const useSessionStore = create<SessionState>()(
                     return stored ? { state: { [name]: stored }, version: 0 } : null;
                 },
                 setItem: (name, value) => {
-                    const key = name as keyof typeof value.state;
-                    cookieStorage.setItem(name, value.state[key] ?? "");
+                    cookieStorage.setItem(name, value.state[name] ?? "");
                     document.location.reload();
                 },
                 removeItem: (name) => {
