@@ -1,7 +1,7 @@
 // app/verify-email/page.tsx
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { getLanguage } from "@/utils/language";
+import { defaultLanguage, getLanguage } from "@/utils/language";
 import Link from "next/link";
 import { verifyEmail } from "@/services";
 
@@ -70,23 +70,17 @@ const translations = {
 
 interface VerificationResult {
   success: boolean;
-  language: string;
 }
 
 async function verifyToken(token: string): Promise<VerificationResult> {
-  try {
-    const language = await getLanguage();
-    const isValid = await verifyEmail(token).then(() => true).catch(() => false);
-    return { success: !!isValid, language };
-  } catch (error) {
-    console.error("Email verification error:", error);
-    const language = await getLanguage();
-    return { success: false, language };
-  }
+  const isValid = await verifyEmail(token).then(() => true).catch(() => false);
+  return { success: !!isValid };
 }
 
-function VerificationLoader() {
-  const t = translations.en; // Default language for loader
+async function VerificationLoader() {
+  const language = await getLanguage();
+  const t = translations[language || defaultLanguage];
+
   return (
     <div className="min-h-screen bg-linear-to-b from-blue-50 to-blue-100 flex flex-col items-center justify-center p-6">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 space-y-6 text-center">
@@ -145,8 +139,8 @@ export default async function EmailVerifiedPage({
   );
 }
 
-async function VerificationContent({ token }: { token: string }) {
-  const { success, language } = await verifyToken(token);
+async function VerificationContent({ token, language }: { token: string; language?: string }) {
+  const { success } = await verifyToken(token);
   const t = translations[language as keyof typeof translations] || translations.en;
 
   if (!success) {
@@ -232,7 +226,7 @@ async function VerificationContent({ token }: { token: string }) {
                 {t.errorCta}
               </div>
             </Link>
-            
+
             <Link
               href="/login"
               className="block w-full border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-xl transition-all duration-300"
@@ -250,10 +244,10 @@ async function VerificationContent({ token }: { token: string }) {
               <span className="font-medium">{t.supportText}</span>
             </div>
             <a
-              href="mailto:support@promeets.com"
+              href="mailto:support@pro-meets.com"
               className="text-red-600 hover:text-red-700 font-semibold hover:underline"
             >
-              support@promeets.com
+              support@pro-meets.com
             </a>
           </div>
         </div>
@@ -270,7 +264,7 @@ async function VerificationContent({ token }: { token: string }) {
           {/* Animated background elements */}
           <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full translate-x-1/3 translate-y-1/3"></div>
-          
+
           <div className="relative z-10">
             {/* Animated checkmark */}
             <div className="relative mx-auto w-32 h-32 mb-8">
@@ -323,28 +317,27 @@ async function VerificationContent({ token }: { token: string }) {
             <div className="relative h-48">
               <div className="absolute inset-0 flex items-center justify-center">
                 {/* Confetti animation container */}
-                    <div className="relative w-64 h-64">
-                      {/* Confetti elements */}
-                      {[...Array(20)].map((_, i) => {
-                        const positions = Array.from({ length: 20 }, () => ({
-                          top: Math.random() * 100,
-                          left: Math.random() * 100,
-                        }));
-                        return (
-                          <div
-                            key={i}
-                            className={`absolute w-3 h-3 rounded-full ${
-                              ['bg-yellow-400', 'bg-red-400', 'bg-blue-400', 'bg-purple-400', 'bg-pink-400'][i % 5]
-                            }`}
-                            style={{
-                              top: `${positions[i].top}%`,
-                              left: `${positions[i].left}%`,
-                              animation: `confetti 1s ease-out ${i * 0.05}s forwards`,
-                            }}
-                          />
-                        );
-                      })}
-                  
+                <div className="relative w-64 h-64">
+                  {/* Confetti elements */}
+                  {[...Array(20)].map((_, i) => {
+                    const positions = Array.from({ length: 20 }, () => ({
+                      top: Math.random() * 100,
+                      left: Math.random() * 100,
+                    }));
+                    return (
+                      <div
+                        key={i}
+                        className={`absolute w-3 h-3 rounded-full ${['bg-yellow-400', 'bg-red-400', 'bg-blue-400', 'bg-purple-400', 'bg-pink-400'][i % 5]
+                          }`}
+                        style={{
+                          top: `${positions[i].top}%`,
+                          left: `${positions[i].left}%`,
+                          animation: `confetti 1s ease-out ${i * 0.05}s forwards`,
+                        }}
+                      />
+                    );
+                  })}
+
                   {/* Central icon */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-32 h-32 bg-linear-to-r from-green-100 to-emerald-100 rounded-full flex items-center justify-center border-4 border-green-200 shadow-lg">

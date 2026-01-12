@@ -105,7 +105,7 @@ export async function getIpInfo(): Promise<{ ip: string }> {
                         return { ip: text.trim() };
                     }
                 }
-            } catch (e) {
+            } catch {
                 continue; // Intentar con el siguiente servicio
             }
         }
@@ -246,7 +246,7 @@ async function checkProxyHeaders(): Promise<boolean> {
         }
 
         return false;
-    } catch (error) {
+    } catch {
         return false;
     }
 }
@@ -362,7 +362,7 @@ export async function getIfconfigMeData() {
                         }
                     }
                     return { [key]: null };
-                } catch (error) {
+                } catch {
                     return { [key]: null };
                 }
             })
