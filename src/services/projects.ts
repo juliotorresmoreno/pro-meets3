@@ -1,4 +1,4 @@
-import config from "../config";
+const apiUrl: string = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL) || "/api";
 import { HTTPError, ValidationErrorResponse } from "../types/http";
 import { Project } from "../models/Project";
 import {
@@ -18,7 +18,7 @@ export async function getProject(
 ): Promise<Project> {
   const queryString = params ? `?${queryBuilder(params)}` : "";
   const response = await fetch(
-    `${config.apiUrl}/projects/${id}${queryString}`,
+    `${apiUrl}/projects/${id}${queryString}`,
     {
       method: "GET",
       headers: {
@@ -44,7 +44,7 @@ export async function getProjects(
   headers: HeadersInit = {}
 ): Promise<Project[]> {
   const queryString = params ? `?${queryBuilder(params)}` : "";
-  const response = await fetch(`${config.apiUrl}/Projects${queryString}`, {
+  const response = await fetch(`${apiUrl}/Projects${queryString}`, {
     method: "GET",
     headers: {
       ...headers,
@@ -70,7 +70,7 @@ export async function createProject(
     "progress" | "openPositions" | "totalPositions"
   >
 ): Promise<Project> {
-  const response = await fetch(`${config.apiUrl}/projects`, {
+  const response = await fetch(`${apiUrl}/projects`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export async function updateProject(
   id: string,
   payload: Omit<Update<Project>, "progress" | "openPositions" | "totalPositions">
 ): Promise<Project> {
-  const response = await fetch(`${config.apiUrl}/projects/${id}`, {
+  const response = await fetch(`${apiUrl}/projects/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -121,7 +121,7 @@ export async function updateProject(
 }
 
 export async function deleteProject(id: number): Promise<void> {
-  const response = await fetch(`${config.apiUrl}/projects/${id}`, {
+  const response = await fetch(`${apiUrl}/projects/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

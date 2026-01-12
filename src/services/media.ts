@@ -1,4 +1,4 @@
-import config from "../config";
+const apiUrl: string = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL) || "/api";
 import { Media } from "../models/Media";
 import { Create } from "../rest";
 
@@ -17,7 +17,7 @@ export function createMedia(
 
   return new Promise<Media>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", `${config.apiUrl}/media`, true);
+    xhr.open("POST", `${apiUrl}/media`, true);
     xhr.withCredentials = true;
 
     xhr.upload.onprogress = (event) => {

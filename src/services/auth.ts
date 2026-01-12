@@ -1,9 +1,12 @@
-import config from "../config";
+
 import { HTTPError, ValidationErrorResponse } from "../types/http";
+const apiUrl: string = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL) || "/api";
 
 interface RegisterFormData {
+  userType: 'recruiter' | 'candidate';
   name: string;
   email: string;
+  phone?: string;
   password: string;
   company?: string;
   terms: boolean;
@@ -18,7 +21,7 @@ type RegisterError = ValidationErrorResponse<RegisterFormData> | HTTPError;
 export async function register(
   data: RegisterFormData
 ): Promise<RegisterResponse> {
-  const response = await fetch(`${config.apiUrl}/auth/register`, {
+  const response = await fetch(`${apiUrl}/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +51,7 @@ export async function register(
 }
 
 export async function resendVerification(email: string): Promise<void> {
-  const response = await fetch(`${config.apiUrl}/auth/resend-verification`, {
+  const response = await fetch(`${apiUrl}/auth/resend-verification`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -64,7 +67,7 @@ export async function resendVerification(email: string): Promise<void> {
 }
 
 export async function verifyEmail(token: string): Promise<void> {
-  const response = await fetch(`${config.apiUrl}/auth/verify-email`, {
+  const response = await fetch(`${apiUrl}/auth/verify-email`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -89,7 +92,7 @@ export async function login(
   password: string,
   rememberMe: boolean = false
 ): Promise<LoginResponse> {
-  const response = await fetch(`${config.apiUrl}/auth/login`, {
+  const response = await fetch(`${apiUrl}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -109,7 +112,7 @@ export async function login(
 export async function refreshToken(
   refreshToken: string
 ): Promise<LoginResponse> {
-  const response = await fetch(`${config.apiUrl}/auth/refresh-token`, {
+  const response = await fetch(`${apiUrl}/auth/refresh-token`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -127,7 +130,7 @@ export async function refreshToken(
 }
 
 export async function forgotPassword(email: string): Promise<void> {
-  const response = await fetch(`${config.apiUrl}/auth/forgot-password`, {
+  const response = await fetch(`${apiUrl}/auth/forgot-password`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -146,7 +149,7 @@ export async function resetPassword(
   token: string,
   newPassword: string
 ): Promise<void> {
-  const response = await fetch(`${config.apiUrl}/auth/reset-password`, {
+  const response = await fetch(`${apiUrl}/auth/reset-password`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -162,7 +165,7 @@ export async function resetPassword(
 }
 
 export async function OAuthGoogleLogin(token: string): Promise<LoginResponse> {
-  const response = await fetch(`${config.apiUrl}/auth/oauth/google`, {
+  const response = await fetch(`${apiUrl}/auth/oauth/google`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

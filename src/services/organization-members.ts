@@ -1,4 +1,4 @@
-import config from "../config";
+const apiUrl: string = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL) || "/api";
 import { HTTPError } from "../types/http";
 import {
   Create,
@@ -20,7 +20,7 @@ export async function getOrganizationMembers(
 ): Promise<OrganizationMember[]> {
   const queryString = params ? `?${queryBuilder(params)}` : "";
   const response = await fetch(
-    `${config.apiUrl}/organization-members/${id}${queryString}`,
+    `${apiUrl}/organization-members/${id}${queryString}`,
     {
       method: "GET",
       headers: {
@@ -51,7 +51,7 @@ export async function getOrganizationsMembers(
 ): Promise<OrganizationMember[]> {
   const queryString = params ? `?${queryBuilder(params)}` : "";
   const response = await fetch(
-    `${config.apiUrl}/organization-members${queryString}`,
+    `${apiUrl}/organization-members${queryString}`,
     {
       method: "GET",
       headers: {
@@ -75,7 +75,7 @@ export async function createOrganizationMember(
   data: Omit<Create<OrganizationMember>, "status" | "userId">,
   headers: HeadersInit = {}
 ): Promise<OrganizationMember> {
-  const response = await fetch(`${config.apiUrl}/organization-members`, {
+  const response = await fetch(`${apiUrl}/organization-members`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export async function updateOrganizationMember(
   data: Update<OrganizationMember>,
   headers: HeadersInit = {}
 ): Promise<OrganizationMember> {
-  const response = await fetch(`${config.apiUrl}/organization-members/${id}`, {
+  const response = await fetch(`${apiUrl}/organization-members/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export async function deleteOrganizationMember(
   id: string,
   headers: HeadersInit = {}
 ): Promise<void> {
-  const response = await fetch(`${config.apiUrl}/organization-members/${id}`, {
+  const response = await fetch(`${apiUrl}/organization-members/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

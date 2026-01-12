@@ -8,13 +8,10 @@ import FeaturesSection from '@/sections/FeaturesSection';
 import { FrequentAskedQuestions } from '@/sections/FrequentAskedQuestions';
 import HeroSection from '@/sections/HeroSection';
 import OfferingsSection from '@/sections/OfferingsSection';
-import { defaultLanguage, isLanguage, Language } from '@/utils';
-import { cookies } from "next/headers"
+import { getLanguage } from '@/utils';
 
 export default async function Home() {
-    const cookieStore = await cookies();
-    const languageCookie = cookieStore.get('language')?.value ?? "";
-    const language = isLanguage(languageCookie) ? languageCookie as Language : defaultLanguage;
+    const language = await getLanguage();
 
     return (
         <div className="min-h-screen bg-linear-to-b from-blue-50 to-white">

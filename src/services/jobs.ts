@@ -1,4 +1,4 @@
-import config from "../config";
+const apiUrl: string = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL) || "/api";
 import { HTTPError, ValidationErrorResponse } from "../types/http";
 import {
   Create,
@@ -17,7 +17,7 @@ export async function getJob(
   headers: HeadersInit = {}
 ): Promise<Job> {
   const queryString = params ? `?${queryBuilder(params)}` : "";
-  const response = await fetch(`${config.apiUrl}/jobs/${id}${queryString}`, {
+  const response = await fetch(`${apiUrl}/jobs/${id}${queryString}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -41,7 +41,7 @@ export async function getJobs(
   headers: HeadersInit = {}
 ): Promise<Job[]> {
   const queryString = params ? `?${queryBuilder(params)}` : "";
-  const response = await fetch(`${config.apiUrl}/jobs${queryString}`, {
+  const response = await fetch(`${apiUrl}/jobs${queryString}`, {
     method: "GET",
     headers: {
       ...headers,
@@ -62,7 +62,7 @@ export async function getJobs(
 type CreateJobError = ValidationErrorResponse<Job> | HTTPError;
 
 export async function createJob(payload: Create<Job>): Promise<Job> {
-  const response = await fetch(`${config.apiUrl}/jobs`, {
+  const response = await fetch(`${apiUrl}/jobs`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export async function updateJob(
   id: string,
   payload: Update<Job>
 ): Promise<Job> {
-  const response = await fetch(`${config.apiUrl}/jobs/${id}`, {
+  const response = await fetch(`${apiUrl}/jobs/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -113,7 +113,7 @@ export async function updateJob(
 }
 
 export async function deleteJob(id: string): Promise<void> {
-  const response = await fetch(`${config.apiUrl}/jobs/${id}`, {
+  const response = await fetch(`${apiUrl}/jobs/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

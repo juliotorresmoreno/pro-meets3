@@ -1,5 +1,5 @@
 import type Stripe from 'stripe';
-import config from "../config";
+const apiUrl: string = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL) || "/api";
 import { PaymentMethod } from "../models/PaymentMethod";
 
 interface CreateSetupIntentResponse {
@@ -8,7 +8,7 @@ interface CreateSetupIntentResponse {
 }
 
 export async function createSetupIntent(): Promise<CreateSetupIntentResponse> {
-  const response = await fetch(`${config.apiUrl}/stripe/create-setup-intent`, {
+  const response = await fetch(`${apiUrl}/stripe/create-setup-intent`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -27,7 +27,7 @@ export async function attachPaymentMethod(
   paymentMethodId: string
 ): Promise<void> {
   const response = await fetch(
-    `${config.apiUrl}/stripe/attach-payment-method`,
+    `${apiUrl}/stripe/attach-payment-method`,
     {
       method: "POST",
       headers: {
@@ -47,7 +47,7 @@ export async function detachPaymentMethod(
   paymentMethodId: string
 ): Promise<void> {
   const response = await fetch(
-    `${config.apiUrl}/stripe/detach-payment-method`,
+    `${apiUrl}/stripe/detach-payment-method`,
     {
       method: "POST",
       headers: {
@@ -64,7 +64,7 @@ export async function detachPaymentMethod(
 }
 
 export async function getPaymentMethods(): Promise<PaymentMethod[]> {
-  const response = await fetch(`${config.apiUrl}/stripe/payment-methods`, {
+  const response = await fetch(`${apiUrl}/stripe/payment-methods`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export async function setDefaultPaymentMethod(
   paymentMethodId: string
 ): Promise<void> {
   const response = await fetch(
-    `${config.apiUrl}/stripe/set-default-payment-method`,
+    `${apiUrl}/stripe/set-default-payment-method`,
     {
       method: "POST",
       headers: {
@@ -100,7 +100,7 @@ export async function setDefaultPaymentMethod(
 }
 
 export async function getInvoiceHistory(): Promise<Stripe.Invoice[]> {
-  const response = await fetch(`${config.apiUrl}/stripe/invoice-history`, {
+  const response = await fetch(`${apiUrl}/stripe/invoice-history`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

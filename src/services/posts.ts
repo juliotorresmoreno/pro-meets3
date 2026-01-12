@@ -1,4 +1,4 @@
-import config from "../config";
+const apiUrl: string = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL) || "/api";
 import { Post } from "../models";
 import {
   Create,
@@ -17,7 +17,7 @@ export async function getPost(
   headers: HeadersInit = {}
 ): Promise<Post> {
   const queryString = params ? `?${queryBuilder(params)}` : "";
-  const response = await fetch(`${config.apiUrl}/posts/${id}${queryString}`, {
+  const response = await fetch(`${apiUrl}/posts/${id}${queryString}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -41,7 +41,7 @@ export async function getPosts(
   headers: HeadersInit = {}
 ): Promise<Post[]> {
   const queryString = params ? `?${queryBuilder(params)}` : "";
-  const response = await fetch(`${config.apiUrl}/posts${queryString}`, {
+  const response = await fetch(`${apiUrl}/posts${queryString}`, {
     method: "GET",
     headers: {
       ...headers,
@@ -67,7 +67,7 @@ export async function createPost(
     "likes" | "comments" | "shares" | "timestamp" | "user" | "liked"
   >
 ): Promise<Post> {
-  const response = await fetch(`${config.apiUrl}/posts`, {
+  const response = await fetch(`${apiUrl}/posts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export async function updatePost(
     "likes" | "comments" | "shares" | "timestamp" | "user" | "liked"
   >
 ): Promise<Post> {
-  const response = await fetch(`${config.apiUrl}/posts/${id}`, {
+  const response = await fetch(`${apiUrl}/posts/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -121,7 +121,7 @@ export async function updatePost(
 }
 
 export async function deletePost(id: number): Promise<void> {
-  const response = await fetch(`${config.apiUrl}/posts/${id}`, {
+  const response = await fetch(`${apiUrl}/posts/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

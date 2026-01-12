@@ -1,4 +1,4 @@
-import config from "../config";
+const apiUrl: string = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL) || "/api";
 import { HTTPError, ValidationErrorResponse } from "../types/http";
 import { Organization } from "../models/Organization";
 import {
@@ -18,7 +18,7 @@ export async function getOrganization(
 ): Promise<Organization> {
   const queryString = params ? `?${queryBuilder(params)}` : "";
   const response = await fetch(
-    `${config.apiUrl}/organizations/${id}${queryString}`,
+    `${apiUrl}/organizations/${id}${queryString}`,
     {
       method: "GET",
       headers: {
@@ -44,7 +44,7 @@ export async function getOrganizations(
   headers: HeadersInit = {}
 ): Promise<Organization[]> {
   const queryString = params ? `?${queryBuilder(params)}` : "";
-  const response = await fetch(`${config.apiUrl}/organizations${queryString}`, {
+  const response = await fetch(`${apiUrl}/organizations${queryString}`, {
     method: "GET",
     headers: {
       ...headers,
@@ -69,7 +69,7 @@ type CreateOrganizationError =
 export async function createOrganization(
   payload: Create<Organization>
 ): Promise<Organization> {
-  const response = await fetch(`${config.apiUrl}/organizations`, {
+  const response = await fetch(`${apiUrl}/organizations`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -102,7 +102,7 @@ export async function updateOrganization(
   id: string,
   payload: Update<Organization>
 ): Promise<Organization> {
-  const response = await fetch(`${config.apiUrl}/organizations/${id}`, {
+  const response = await fetch(`${apiUrl}/organizations/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export async function updateOrganization(
 }
 
 export async function deleteOrganization(id: number): Promise<void> {
-  const response = await fetch(`${config.apiUrl}/organizations/${id}`, {
+  const response = await fetch(`${apiUrl}/organizations/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -144,7 +144,7 @@ interface OrganizationStatusResponse {
 export async function statusOrganization(
   id: string
 ): Promise<OrganizationStatusResponse> {
-  const response = await fetch(`${config.apiUrl}/organizations/${id}/status`, {
+  const response = await fetch(`${apiUrl}/organizations/${id}/status`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
