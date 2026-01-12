@@ -1,31 +1,25 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { defaultLanguage, Language } from "@/utils/language";
 import CookieStorage from "@/utils/cookieStorage";
 
 const cookieStorage = new CookieStorage();
 
-interface LanguageState {
-    language: Language;
-    setLanguage: (lang: Language) => void;
+interface SessionState {
+    token: string | null;
 }
 
-const useLanguageStore = create<LanguageState>()(
+const useSessionStore = create<SessionState>()(
     persist(
         (set) => ({
-            language: defaultLanguage,
-            setLanguage: (lang) => {
-                set({ language: lang });
-                window.location.reload();
-            },
+            token: null,
+            setToken: (token: string | null) => set({ token }),
         }),
         {
-            name: "language",
+            name: "session",
             storage: {
                 getItem: (name) => {
                     const stored = cookieStorage.getItem(name);
-                    const value = name === "language" ? (stored ?? defaultLanguage) as Language : stored;
-                    return value ? { state: { [name]: value }, version: 0 } : null;
+                    return stored ? { state: { [name]: stored }, version: 0 } : null;
                 },
                 setItem: (name, value) => {
                     const key = name as keyof typeof value.state;
@@ -41,4 +35,4 @@ const useLanguageStore = create<LanguageState>()(
     )
 );
 
-export default useLanguageStore;
+export default useSessionStore;
