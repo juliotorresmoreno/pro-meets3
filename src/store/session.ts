@@ -28,12 +28,11 @@ const useSessionStore = create<SessionState>()(
                     return stored ? { state: { [name]: stored }, version: 0 } : null;
                 },
                 setItem: (name, value) => {
-                    cookieStorage.setItem(name, value.state[name] ?? "");
-                    document.location.reload();
+                    cookieStorage.setItem('accessToken', value.state.accessToken || '');
+                    cookieStorage.setItem('refreshToken', value.state.refreshToken || '');
                 },
                 removeItem: (name) => {
                     cookieStorage.removeItem(name);
-                    document.location.reload();
                 },
             },
         }
