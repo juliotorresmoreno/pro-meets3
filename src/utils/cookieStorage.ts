@@ -6,8 +6,11 @@ class CookieStorage {
     }
 
     setItem(name: string, value: string): void {
-        const secureFlag = location.protocol === "https:" ? "Secure;" : "";
-        document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=None; ${secureFlag}`;
+        const isHttps = location.protocol === "https:";
+        const sameSite = isHttps ? "None" : "Lax";
+        const secure = isHttps ? "Secure;" : "";
+
+        document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=${sameSite}; ${secure}`;
     }
 
     removeItem(name: string): void {

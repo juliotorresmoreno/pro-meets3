@@ -1,17 +1,26 @@
 "use server";
 
+import Sidebar from "@/components/candidate/Sidebar";
+import { ProfileStatus } from "@/models/Profile";
 import { getProfile } from "@/services/profile";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
     const profile = await getProfile("me");
-    console.log("User Profile:", profile);
+    if (profile.status !== ProfileStatus.COMPLETE) {
+        redirect("/dashboard/profile/setup");
+    }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-b from-green-50 to-white">
-            <h1 className="text-4xl font-bold mb-6">Dashboard</h1>
-            <p className="text-lg max-w-2xl text-center">
-                Welcome to your dashboard! Here you can manage your account, view analytics, and access all the features ProMeets has to offer.
-            </p>
+        <div className="flex">
+            <Sidebar selectedMenuItem="dashboard" />
+
+            {/* Main Content */}
+            <main className="flex-1 p-6">
+                <h1 className="text-2xl font-bold text-gray-900">
+                    Dashboard Overview
+                </h1>
+            </main>
         </div>
     );
 }

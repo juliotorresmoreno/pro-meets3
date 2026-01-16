@@ -14,15 +14,6 @@ export async function getProfile(
 ): Promise<Profile> {
     const token = await getSession();
     const queryString = params ? `?${queryBuilder(params)}` : "";
-    
-    console.log(`${apiUrl}/profile/${id}${queryString}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `Bearer ${token}` : "",
-            ...headers,
-        },
-    });
 
     const response = await fetch(
         `${apiUrl}/profile/${id}${queryString}`,
@@ -39,7 +30,6 @@ export async function getProfile(
 
     if (!response.ok) {
         const errorData: HTTPError = await response.json();
-        console.error("Error fetching Profile:", errorData);
         throw new Error(errorData.message || "Failed to fetch Profile");
     }
 

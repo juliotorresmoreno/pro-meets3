@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getLanguage } from "@/utils";
 import { protect } from "@/utils/guard";
+import { session } from "@/services";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -26,12 +27,18 @@ export default async function RootLayout({
 }>) {
     await protect();
     const language = await getLanguage();
+    const user = await session();
+
+    const DashboardLayout = (await import(`@/components/${user.userType}/DashboardLayout`)).default;
+
     return (
         <html lang={language}>
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                {children}
+                <DashboardLayout>
+                    {children}
+                </DashboardLayout>
             </body>
         </html>
     );

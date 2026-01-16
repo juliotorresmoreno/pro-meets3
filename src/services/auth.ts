@@ -1,5 +1,7 @@
 
+import { getSession } from "@/utils/session";
 import { HTTPError, ValidationErrorResponse } from "../types/http";
+import { User } from "@/models";
 const apiUrl: string = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL) || "/api";
 
 interface RegisterFormData {
@@ -179,6 +181,27 @@ export async function OAuthGoogleLogin(token: string): Promise<LoginResponse> {
   if (!response.ok) {
     const errorData: HTTPError = await response.json();
     throw new Error(errorData.message || "Google login failed");
+  }
+
+  return response.json();
+}
+
+export type SessionData = User;
+
+export async function session(): Promise<SessionData> {
+  const token = await getSession();
+  const response = await fetch(`${apiUrl}/auth/session`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorData: HTTPError = await response.json();
+    throw new Error(errorData.message || "Failed to fetch session");
   }
 
   return response.json();

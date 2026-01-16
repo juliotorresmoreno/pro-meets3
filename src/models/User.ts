@@ -1,12 +1,14 @@
 import { Language } from "../utils/language";
 
 export type Role = "admin" | "user";
+export type UserType = "candidate" | "recruiter";
 
 export type User = {
   id: string;
   name: string;
   email: string;
   password: string;
+  userType: UserType;
   isEmailVerified: boolean;
   verificationToken: string | null;
   verificationTokenExpiresAt: string | null;
